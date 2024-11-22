@@ -11,10 +11,10 @@ A FastAPI-based location tracking system with TCP server support and asynchronou
 1. Copy `.env-example` to `.env` and configure your environment variables
 2. Create a virtual environment: `python -m venv venv`
 3. Install dependencies: `pip install -r requirements.txt`
-3. Start services using Docker Compose: `docker-compose up -d`
+4. Start services using Docker Compose: `docker-compose up -d`
 
 #### IMPORTANT
-If you get an error about port being in use you should run this command:
+If you get an error about port being in use, you should run this command after the change port on docker-compose.yml:
 ```bash 
 docker compose down && docker compose up --build -d
 ```
