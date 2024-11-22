@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  tcp_server:
+    build: .
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+    command: python -m controller.tcp_controller
+
+  celery_worker:
+    build: .
+    depends_on:
+      - mongodb
+    command: celery -A celery_tasks.location_tasks worker --loglevel=info
+
+  flower:
+    build: .
+    ports:
+      - "5555:5555"
+    depends_on:
+      - celery_worker
+    command: celery -A celery_tasks.location_tasks flower --port=5555
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
